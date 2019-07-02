@@ -1,0 +1,24 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="xyz.truenight.usbdevices.rx">
+
+    <application>
+
+        <activity
+                android:name="xyz.truenight.usbdevices.DeviceConnectionActivity"
+                android:exported="false"
+                android:noHistory="true"
+                android:excludeFromRecents="true"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                    android:resource="@xml/device_filter"/>
+
+        </activity>
+
+    </application>
+
+</manifest>

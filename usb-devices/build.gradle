@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+ext {
+    bintrayName = 'usb-devices'
+    libraryName = 'RxUsbDevices'
+    artifact = 'usb-devices' // should be same as module name
+    libraryDescription = 'RxJava2 Observables for UsbDevice connections'
+}
+
+android {
+    compileSdkVersion 28
+
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api 'xyz.truenight.utils:optional-kt:2.0.1'
+
+    api "io.reactivex.rxjava2:rxjava:2.2.8"
+
+    api 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+}
+
+tasks.withType(Javadoc).all {
+    enabled = false
+}
+
+apply from: '../ext.gradle'
+apply from: '../publish.gradle'
