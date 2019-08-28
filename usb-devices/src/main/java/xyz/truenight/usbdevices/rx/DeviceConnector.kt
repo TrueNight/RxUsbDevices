@@ -8,7 +8,11 @@ import xyz.truenight.usbdevices.DeviceReceiver
 import xyz.truenight.usbdevices.UsbDeviceFilter
 import xyz.truenight.utils.optional.toOptional
 
-class DeviceConnector<M>(context: Context, filterResId: Int, private val mapping: (UsbDevice?) -> M?) {
+class DeviceConnector<M : Any>(
+    context: Context,
+    filterResId: Int,
+    private val mapping: (UsbDevice?) -> M?
+) {
 
     private val usbManager: UsbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
 

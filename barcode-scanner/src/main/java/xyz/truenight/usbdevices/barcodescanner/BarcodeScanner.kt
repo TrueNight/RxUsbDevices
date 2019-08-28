@@ -15,7 +15,7 @@ object BarcodeScanner {
 
     private lateinit var connector: DeviceConnector<ReadInterface>
 
-    lateinit var service: BarcodeScannerService
+    private lateinit var service: BarcodeScannerService
 
     private var deviceAttachedDisposable: Disposable? = null
 
@@ -39,4 +39,7 @@ object BarcodeScanner {
                 }
             }
     }
+
+    fun observe() = service.observe()
+
 }
