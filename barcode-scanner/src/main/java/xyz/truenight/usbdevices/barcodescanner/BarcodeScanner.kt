@@ -33,7 +33,7 @@ object BarcodeScanner {
             .subscribe {
                 Timber.d("Device ${if (it.present) "connected" else "not connected"}")
                 if (it.present) {
-                    service.connect(it.get)
+                    service.connect(it.get())
                 } else {
                     service.close()
                 }
