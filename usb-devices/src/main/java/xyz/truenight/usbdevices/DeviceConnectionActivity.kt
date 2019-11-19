@@ -19,7 +19,7 @@ class DeviceConnectionActivity : Activity() {
                 val usbDevice = it.getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE)
 
                 // Create a new intent and put the usb device in as an extra
-                val broadcastIntent = Intent(DeviceReceiver.ACTION_USB_DEVICE_ATTACHED)
+                val broadcastIntent = Intent(DeviceReceiver.ACTION_ACCEPTED_USB_DEVICE_ATTACHED)
                 broadcastIntent.putExtra(UsbManager.EXTRA_DEVICE, usbDevice)
 
                 // Broadcast this event so we can receive it

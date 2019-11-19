@@ -35,7 +35,6 @@ class ReadInterface(val device: UsbDevice, val usbInterface: UsbInterface, val u
 
             for (i in 0 until usbInterface.endpointCount) {
                 val endpoint = usbInterface.getEndpoint(i)
-//            if (endpoint.type != UsbConstants.USB_ENDPOINT_XFER_BULK) continue
 
                 if (endpoint.direction == UsbConstants.USB_DIR_IN) {
                     return endpoint

@@ -1,1 +1,1 @@
-include ':usb-devices', ':barcode-scanner'
+include ':usb-devices-base', ':usb-devices', ':usb-devices-root', ':barcode-scanner'

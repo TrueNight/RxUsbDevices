@@ -19,16 +19,17 @@ object BarcodeScanner {
 
     private var deviceAttachedDisposable: Disposable? = null
 
-    fun init(context: Context) {
-        connector = DeviceConnector(
-            context,
-            R.xml.scanner_filter
-        ) { ReadInterface.create(it) }
-        service =
-            BarcodeScannerService(context)
+    fun init(
+        context: Context,
+        deviceConnector: DeviceConnector<ReadInterface> =
+            DeviceConnector(context, R.xml.scanner_filter) { ReadInterface.create(it) }
+    ) {
+        connector = deviceConnector
+
+        service = BarcodeScannerService(context)
 
         deviceAttachedDisposable?.dispose()
-        deviceAttachedDisposable = connector.observe()
+        deviceAttachedDisposable = deviceConnector.observe()
             .observeOn(Schedulers.io())
             .subscribe {
                 Timber.d("Device ${if (it.present) "connected" else "not connected"}")

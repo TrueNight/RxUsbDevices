@@ -18,15 +18,7 @@ constructor(ctx: Context, resourceId: Int) {
      * Returns a list of connected USB Host devices matching the devices filter.
      */
     val devices: List<UsbDevice>
-        get() {
-            val matchedDevices = ArrayList<UsbDevice>()
-            for (device in usbManager.deviceList.values) {
-                if (matchesHostDevice(device)) {
-                    matchedDevices.add(device)
-                }
-            }
-            return matchedDevices
-        }
+        get() = usbManager.deviceList.values.filter { matchesHostDevice(it) }
 
     init {
 
@@ -42,14 +34,7 @@ constructor(ctx: Context, resourceId: Int) {
         }
     }
 
-    fun matchesHostDevice(device: UsbDevice): Boolean {
-        for (filter in hostDeviceFilters) {
-            if (filter.matches(device)) {
-                return true
-            }
-        }
-        return false
-    }
+    fun matchesHostDevice(device: UsbDevice) = hostDeviceFilters.any { it.matches(device) }
 
     class DeviceFilter private constructor(
         // USB Vendor ID (or -1 for unspecified)
@@ -81,10 +66,12 @@ constructor(ctx: Context, resourceId: Int) {
                     device.deviceClass, device.deviceSubclass,
                     device.deviceProtocol
                 )
-            )
+            ) {
                 return true
 
+            }
             // if device doesn't match, check the interfaces
+
             val count = device.interfaceCount
             for (i in 0 until count) {
                 val intf = device.getInterface(i)
@@ -93,8 +80,9 @@ constructor(ctx: Context, resourceId: Int) {
                         intf.interfaceSubclass,
                         intf.interfaceProtocol
                     )
-                )
+                ) {
                     return true
+                }
             }
 
             return false
@@ -114,16 +102,12 @@ constructor(ctx: Context, resourceId: Int) {
                     // All attribute values are ints
                     val value = Integer.parseInt(parser.getAttributeValue(i))
 
-                    if ("vendor-id" == name) {
-                        vendorId = value
-                    } else if ("product-id" == name) {
-                        productId = value
-                    } else if ("class" == name) {
-                        deviceClass = value
-                    } else if ("subclass" == name) {
-                        deviceSubclass = value
-                    } else if ("protocol" == name) {
-                        deviceProtocol = value
+                    when (name) {
+                        "vendor-id" -> vendorId = value
+                        "product-id" -> productId = value
+                        "class" -> deviceClass = value
+                        "subclass" -> deviceSubclass = value
+                        "protocol" -> deviceProtocol = value
                     }
                 }
 

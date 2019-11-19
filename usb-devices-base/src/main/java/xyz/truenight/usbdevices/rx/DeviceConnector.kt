@@ -4,23 +4,24 @@ import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import io.reactivex.processors.BehaviorProcessor
+import xyz.truenight.usbdevices.DeviceConnectionListener
 import xyz.truenight.usbdevices.DeviceReceiver
 import xyz.truenight.usbdevices.UsbDeviceFilter
 import xyz.truenight.utils.optional.toOptional
 
-class DeviceConnector<M : Any>(
+open class DeviceConnector<M : Any>(
     context: Context,
     filterResId: Int,
     private val mapping: (UsbDevice?) -> M?
-) {
+) : DeviceConnectionListener {
 
-    private val usbManager: UsbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
+    protected val usbManager: UsbManager =
+        context.getSystemService(Context.USB_SERVICE) as UsbManager
 
-    private val deviceFilter: UsbDeviceFilter =
-        UsbDeviceFilter(context, filterResId)
+    protected val deviceFilter: UsbDeviceFilter = UsbDeviceFilter(context, filterResId)
 
     // todo add support of multi-connections
-    private fun findDevice(): Pair<UsbDevice?, M?> {
+    protected open fun findDevice(): Pair<UsbDevice?, M?> {
         deviceFilter.devices.forEach { device ->
             mapping(device)
                 ?.takeIf { usbManager.hasPermission(device) }
@@ -37,11 +38,16 @@ class DeviceConnector<M : Any>(
     fun observe() = pairSubject.map { it.second.toOptional() }
 
     init {
+        // todo maybe subscribe only if observed
+        registerReceiver(context)
+    }
+
+    protected open fun registerReceiver(context: Context) {
         val appContext = context.applicationContext
         DeviceReceiver(this, deviceFilter).register(appContext)
     }
 
-    internal fun onDeviceConnected(connected: Boolean, device: UsbDevice) {
+    private fun onDeviceChanged() {
         val currentDevice = pairSubject.value?.first
 
         val pair = findDevice()
@@ -52,6 +58,15 @@ class DeviceConnector<M : Any>(
     }
 
     companion object {
-        private val EMPTY = null to null
+        @JvmStatic
+        protected val EMPTY = null to null
+    }
+
+    override fun onDeviceConnected(device: UsbDevice) {
+        onDeviceChanged()
+    }
+
+    override fun onDeviceDisconnected(device: UsbDevice) {
+        onDeviceChanged()
     }
 }
