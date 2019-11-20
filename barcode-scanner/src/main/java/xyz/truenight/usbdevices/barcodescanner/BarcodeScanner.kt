@@ -3,9 +3,8 @@ package xyz.truenight.usbdevices.barcodescanner
 import android.content.Context
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import ru.butik.barcodescanner.R
 import timber.log.Timber
-import xyz.truenight.usbdevices.rx.DeviceConnector
+import xyz.truenight.usbdevices.rx.BaseDeviceConnector
 
 
 /**
@@ -13,17 +12,13 @@ import xyz.truenight.usbdevices.rx.DeviceConnector
  */
 object BarcodeScanner {
 
-    private lateinit var connector: DeviceConnector<ReadInterface>
+    private lateinit var connector: BaseDeviceConnector<ReadInterface>
 
     private lateinit var service: BarcodeScannerService
 
     private var deviceAttachedDisposable: Disposable? = null
 
-    fun init(
-        context: Context,
-        deviceConnector: DeviceConnector<ReadInterface> =
-            DeviceConnector(context, R.xml.scanner_filter) { ReadInterface.create(it) }
-    ) {
+    fun init(context: Context, deviceConnector: BaseDeviceConnector<ReadInterface>) {
         connector = deviceConnector
 
         service = BarcodeScannerService(context)

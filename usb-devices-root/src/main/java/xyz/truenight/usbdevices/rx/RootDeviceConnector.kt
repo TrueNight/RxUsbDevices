@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.usb.UsbDevice
-import xyz.truenight.usbdevices.DeviceReceiver
 import xyz.truenight.utils.optional.ifPresent
 
 class RootDeviceConnector<M : Any>(
     context: Context,
     filterResId: Int,
     private val mapping: (UsbDevice?) -> M?
-) : DeviceConnector<M>(context, filterResId, mapping) {
+) : BaseDeviceConnector<M>(context, filterResId, mapping, true) {
 
     private val appUid =
         context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
@@ -19,11 +18,6 @@ class RootDeviceConnector<M : Any>(
 
     init {
         enablePrivateApi()
-    }
-
-    override fun registerReceiver(context: Context) {
-        val appContext = context.applicationContext
-        DeviceReceiver(this, deviceFilter).register(appContext, true)
     }
 
     // todo add support of multi-connections

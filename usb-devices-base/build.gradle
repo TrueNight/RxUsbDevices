@@ -3,9 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 ext {
-    bintrayName = 'usb-devices'
-    libraryName = 'RxUsbDevices'
-    artifact = 'usb-devices' // should be same as module name
+    bintrayName = 'usb-devices-base'
+    libraryName = 'RxUsbDevicesBase'
+    artifact = 'usb-devices-base' // should be same as module name
     libraryDescription = 'RxJava2 Observables for UsbDevice connections'
 }
 

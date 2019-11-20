@@ -9,10 +9,11 @@ import xyz.truenight.usbdevices.DeviceReceiver
 import xyz.truenight.usbdevices.UsbDeviceFilter
 import xyz.truenight.utils.optional.toOptional
 
-open class DeviceConnector<M : Any>(
+abstract class BaseDeviceConnector<M : Any>(
     context: Context,
     filterResId: Int,
-    private val mapping: (UsbDevice?) -> M?
+    private val mapping: (UsbDevice?) -> M?,
+    root: Boolean = false
 ) : DeviceConnectionListener {
 
     protected val usbManager: UsbManager =
@@ -39,12 +40,8 @@ open class DeviceConnector<M : Any>(
 
     init {
         // todo maybe subscribe only if observed
-        registerReceiver(context)
-    }
-
-    protected open fun registerReceiver(context: Context) {
         val appContext = context.applicationContext
-        DeviceReceiver(this, deviceFilter).register(appContext)
+        DeviceReceiver(this, deviceFilter).register(appContext, root)
     }
 
     private fun onDeviceChanged() {
@@ -62,11 +59,11 @@ open class DeviceConnector<M : Any>(
         protected val EMPTY = null to null
     }
 
-    override fun onDeviceConnected(device: UsbDevice) {
+    final override fun onDeviceConnected(device: UsbDevice) {
         onDeviceChanged()
     }
 
-    override fun onDeviceDisconnected(device: UsbDevice) {
+    final override fun onDeviceDisconnected(device: UsbDevice) {
         onDeviceChanged()
     }
 }
