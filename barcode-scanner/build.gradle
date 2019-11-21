@@ -31,7 +31,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api 'xyz.truenight.usbdevices:usb-devices-base:1.2.2'
+    api 'xyz.truenight.usbdevices:usb-devices-base:1.2.3'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
