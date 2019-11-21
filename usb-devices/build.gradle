@@ -35,7 +35,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api 'xyz.truenight.usbdevices:usb-devices-base:1.2.3'
+    api 'xyz.truenight.usbdevices:usb-devices-base:1.2.4'
 
     api 'xyz.truenight.utils:optional-kt:2.1.2'
 

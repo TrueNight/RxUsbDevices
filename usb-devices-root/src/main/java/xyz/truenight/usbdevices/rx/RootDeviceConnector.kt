@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.usb.UsbDevice
-import xyz.truenight.utils.optional.ifPresent
 
 class RootDeviceConnector<M : Any>(
     context: Context,
@@ -23,15 +22,8 @@ class RootDeviceConnector<M : Any>(
     // todo add support of multi-connections
     override fun findDevice(): Pair<UsbDevice?, M?> {
         deviceFilter.devices.forEach { device ->
-            mapping(device).also {
-                it.ifPresent {
-                    if (!usbManager.hasPermission(device)) grantAutomaticUsbPermissionRoot(
-                        appUid,
-                        device
-                    )
-                }
-                it?.apply { return@findDevice device to this }
-            }
+            if (!usbManager.hasPermission(device)) grantAutomaticUsbPermissionRoot(appUid, device)
+            mapping(device)?.apply { return@findDevice device to this }
         }
         return EMPTY
     }

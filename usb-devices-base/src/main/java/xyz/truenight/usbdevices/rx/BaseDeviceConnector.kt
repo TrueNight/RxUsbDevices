@@ -24,9 +24,9 @@ abstract class BaseDeviceConnector<M : Any>(
     // todo add support of multi-connections
     protected open fun findDevice(): Pair<UsbDevice?, M?> {
         deviceFilter.devices.forEach { device ->
-            mapping(device)
-                ?.takeIf { usbManager.hasPermission(device) }
-                ?.apply { return@findDevice device to this }
+            if (usbManager.hasPermission(device)) {
+                mapping(device)?.apply { return@findDevice device to this }
+            }
         }
         return EMPTY
     }
