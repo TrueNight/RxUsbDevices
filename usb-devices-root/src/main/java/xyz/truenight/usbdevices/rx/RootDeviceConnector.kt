@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.usb.UsbDevice
+import timber.log.Timber
 
 class RootDeviceConnector<M : Any>(
     context: Context,
@@ -62,7 +63,7 @@ class RootDeviceConnector<M : Any>(
                 grantDevicePermissionMethod.invoke(iUsbManager, usbDevice, appUid)
                 return true
             } catch (e: Exception) {
-                e.printStackTrace()
+                Timber.e(e)
                 return false
             }
         }

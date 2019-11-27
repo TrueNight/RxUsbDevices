@@ -5,7 +5,7 @@
 
         <activity
                 android:name="xyz.truenight.usbdevices.DeviceConnectionActivity"
-                android:exported="false"
+                android:exported="true"
                 android:noHistory="true"
                 android:excludeFromRecents="true"
                 android:directBootAware="true"
